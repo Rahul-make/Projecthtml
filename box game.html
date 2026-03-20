@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Box Click Game</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(to right, #1e3c72, #2a5298);
+        color: white;
+    }
+
+    h1 {
+        margin-top: 20px;
+    }
+
+    #gameArea {
+        width: 90%;
+        max-width: 600px;
+        height: 400px;
+        margin: 20px auto;
+        background: white;
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #box {
+        width: 50px;
+        height: 50px;
+        background: red;
+        position: absolute;
+        cursor: pointer;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .info {
+        font-size: 18px;
+        margin: 10px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 16px;
+        background: #ff9800;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+    }
+
+    button:hover {
+        background: #e68900;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>🎯 Box Click Game</h1>
+
+<div class="info">Time: <span id="time">30</span> sec</div>
+<div class="info">Score: <span id="score">0</span></div>
+
+<button onclick="startGame()">Start Game</button>
+
+<div id="gameArea">
+    <div id="box"></div>
+</div>
+
+<script>
+let score = 0;
+let time = 30;
+let gameInterval;
+let timerInterval;
+
+const box = document.getElementById("box");
+const gameArea = document.getElementById("gameArea");
+
+function startGame() {
+    score = 0;
+    time = 30;
+
+    document.getElementById("score").innerText = score;
+    document.getElementById("time").innerText = time;
+
+    box.style.display = "block";
+
+    moveBox();
+
+    clearInterval(gameInterval);
+    clearInterval(timerInterval);
+
+    gameInterval = setInterval(moveBox, 800);
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+function moveBox() {
+    const maxX = gameArea.clientWidth - 50;
+    const maxY = gameArea.clientHeight - 50;
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    box.style.left = x + "px";
+    box.style.top = y + "px";
+
+    // Random color
+    box.style.background = getRandomColor();
+}
+
+box.addEventListener("click", function() {
+    score++;
+    document.getElementById("score").innerText = score;
+    moveBox();
+});
+
+function updateTimer() {
+    time--;
+    document.getElementById("time").innerText = time;
+
+    if (time <= 0) {
+        clearInterval(gameInterval);
+        clearInterval(timerInterval);
+        box.style.display = "none";
+        alert("Game Over! Your score: " + score);
+    }
+}
+
+function getRandomColor() {
+    const colors = ["red", "blue", "green", "purple", "orange"];
+    return colors[Math.floor(Math.random() * colors.length)];
+}
+</script>
+
+</body>
+</html>
